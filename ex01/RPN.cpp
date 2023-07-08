@@ -9,7 +9,10 @@ RPN::RPN() {
 }
 
 RPN::~RPN() {
-
+    for (int i = 0; i < _stack.size(); i++) {
+        _stack[i].clear();
+    }
+    _stack.clear();
 }
 
 RPN::RPN(const std::string &str) {
@@ -28,7 +31,8 @@ RPN::RPN(const RPN &obj) {
 
 RPN &RPN::operator=(const RPN &obj) {
     if (this != &obj) {
-        // copy
+        _stack[0] = obj._stack[0];
+        _tempStack = obj._tempStack;
     }
     return *this;
 }
