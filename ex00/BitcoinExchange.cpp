@@ -21,7 +21,10 @@ BitcoinExchange::BitcoinExchange(const std::string &fname) {
 
 BitcoinExchange::BitcoinExchange() {}
 
-BitcoinExchange::~BitcoinExchange() {}
+BitcoinExchange::~BitcoinExchange() {
+    _dataMap.clear();
+    _fileData.clear();
+}
 
 
 /**
