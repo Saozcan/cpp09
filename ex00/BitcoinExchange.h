@@ -6,6 +6,7 @@
 #define CPP09_BitcoinExchange_H
 
 #include <vector>
+#include "map"
 #include <string>
 #include "fstream"
 #include <sstream>
@@ -18,7 +19,7 @@ using std::cout;
 using std::endl;
 
 enum BtcErrors{
-    INVALID_DATE = -10,
+    INVALID_DATE = -9999,
     NOT_POSITIVE,
     BAD_INPUT,
     TOO_LARGE_NUMBER,
@@ -32,17 +33,31 @@ public:
     BitcoinExchange &operator=(const BitcoinExchange &BitcoinExchange);
     ~BitcoinExchange();
 
+    void readDataIntoMap(const std::string &fname);
+    void readFileAndExchange(const std::string &fname);
+    static void printFileData(const std::vector<std::string> &fileData);
+    std::string errorCheck(const std::vector<std::string> &row);
+
+
     void readData(const std::string &fname);
-    viod readFile(const std::string &fname);
-    void printData();
+//    void readFile(const std::string &fname);
+    static void printData(const std::map<std::string, double> &map);
     int getBitcoinValue(int year, int month, int day);
 
+
+    const std::map<std::string, double> &getDateMap();
+    const std::vector<std::string> &getFileDate();
+
 private:
+    std::vector<std::string> _fileData;
+    std::map<std::string, double> _dataMap;
+
     std::vector<std::vector<std::string>> _data;
-    std::vector<std::vector<std::string>> _fileData;
+    std::map<std::string, double> _fileDateMap;
 
     int getClosestBitcoinValue(int year, int month, int day);
     std::string getDate(int year, int month, int day);
+    std::string trimWhiteSpace(std::string str);
 
 };
 
