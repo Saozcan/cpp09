@@ -9,9 +9,13 @@ int main(int ac, char **av)
         return 1;
     }
 
-    BitcoinExchange btcExchange(av[1]);
+    try {
+        BitcoinExchange btcExchange(av[1]);
 
-    btcExchange.printFileData(btcExchange.getFileDate());
+        BitcoinExchange::printFileData(btcExchange.getFileDate());
+    } catch (std::exception &e) {
+        cout << e.what() << endl;
+    }
 
 //    cout << "Btc value: " << btcExchange.getBitcoinValue(2022, 02, 01) << endl;
 
