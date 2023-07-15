@@ -9,20 +9,16 @@ RPN::RPN() {
 }
 
 RPN::~RPN() {
-    for (int i = 0; i < _stack.size(); i++) {
-        _stack[i].clear();
-    }
-    _stack.clear();
+
 }
 
 RPN::RPN(const std::string &str) {
-    std::vector<char> firstStack;
+    const std::string checkArr = "0123456789+-*/ ";
     for (int i = 0; i < str.length(); i++) {
-        if (isspace(str[i]))
-            continue;
-        firstStack.push_back(str[i]);
+        if (checkArr.find(str[i]) == std::string::npos)
+            throw std::runtime_error("Typing Error...");
     }
-    _stack.push_back(firstStack);
+    checkAndCalculate(str);
 }
 
 RPN::RPN(const RPN &obj) {
@@ -30,15 +26,11 @@ RPN::RPN(const RPN &obj) {
 }
 
 RPN &RPN::operator=(const RPN &obj) {
-    if (this != &obj) {
-        _stack[0] = obj._stack[0];
-        _tempStack = obj._tempStack;
-    }
+    this->_tempStack = obj._tempStack;
     return *this;
 }
 
 void RPN::print() {
-    checkAndCalculate(_stack[0]);
     std::stack<int> tempStack = _tempStack;
     while (!tempStack.empty()) {
         std::cout << tempStack.top() << " ";
@@ -48,12 +40,14 @@ void RPN::print() {
 }
 //endline silinecek
 
-void RPN::checkAndCalculate(const std::vector<char> &stack) {
+void RPN::checkAndCalculate(const std::string &stack) {
     std::stack<int> tempStack;
     for (int i = 0; i < stack.size(); i++) {
         if (isdigit(stack[i])) {
             tempStack.push((stack[i] - '0'));
         } else {
+            if (tempStack.size() <= 1)
+                throw std::runtime_error("Typing Error...");
             int a = tempStack.top();
             tempStack.pop();
             int b = tempStack.top();
@@ -65,7 +59,9 @@ void RPN::checkAndCalculate(const std::vector<char> &stack) {
 }
 
 int RPN::_calculate(int a, int b, char op) {
-    std::cout << "a: " << a << " b: " << b << " op: " << op << std::endl;
+    if (op == '/' && b == 0) {
+        throw std::invalid_argument("Bad condition...");
+    }
     switch (op) {
         case '+':
             return a + b;

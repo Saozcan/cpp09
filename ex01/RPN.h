@@ -21,10 +21,9 @@ public:
     void print();
 
 private:
-    std::vector<std::vector<char>> _stack;
     std::stack<int> _tempStack;
 
-    void checkAndCalculate(const std::vector<char> &stack);
+    void checkAndCalculate(const std::string &stack);
     int _calculate(int a, int b, char op);
     //Helper functions
 };

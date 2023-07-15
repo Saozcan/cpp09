@@ -11,8 +11,12 @@ int main(int ac, char** av) {
         return 1;
     }
 
-    RPN rpn(av[1]);
+    try {
+        RPN rpn(av[1]);
+        rpn.print();
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 
-    rpn.print();
     return 0;
 }
