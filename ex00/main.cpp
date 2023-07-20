@@ -15,7 +15,5 @@ int main(int ac, char **av)
         cout << e.what() << endl;
     }
 
-//    cout << "Btc value: " << btcExchange.getBitcoinValue(2022, 02, 01) << endl;
-
     return 0;
 }
