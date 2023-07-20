@@ -11,8 +11,6 @@ int main(int ac, char **av)
 
     try {
         BitcoinExchange btcExchange(av[1]);
-
-        BitcoinExchange::printFileData(btcExchange.getFileDate());
     } catch (std::exception &e) {
         cout << e.what() << endl;
     }

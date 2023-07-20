@@ -36,10 +36,8 @@ public:
     static void printFileData(const std::vector<std::string> &fileData);
 
     const std::map<std::string, double> &getDateMap();
-    const std::vector<std::string> &getFileDate();
 
 private:
-    std::vector<std::string> _fileData;
     std::map<std::string, double> _dataMap;
 
     std::string trimWhiteSpace(std::string str);

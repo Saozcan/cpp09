@@ -23,7 +23,6 @@ BitcoinExchange::BitcoinExchange() {}
 
 BitcoinExchange::~BitcoinExchange() {
     _dataMap.clear();
-    _fileData.clear();
 }
 
 
@@ -70,7 +69,7 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
             double exhangeValue;
             if (row.size() == 2) {
                 if (!errorCheck(row).empty()) {
-                    _fileData.push_back(errorCheck(row));
+                    std::cout << (errorCheck(row)) << std::endl;
                     continue;
                 }
                 if (it != _dataMap.end()) {
@@ -80,10 +79,10 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
                     exhangeValue = _dataMap.upper_bound(trimWhiteSpace(row[0]))->second * atof(row[1].c_str());
             }
             else {
-                _fileData.push_back("Error: bad input => " + row[0]);
+                std::cout << ("Error: bad input => " + row[0]) << std::endl;
                 continue;
             }
-            _fileData.push_back(row[0] + " => " + row[1] + " = " + std::to_string(exhangeValue));
+            std::cout << (row[0] + " => " + row[1] + " = " + std::to_string(exhangeValue)) << std::endl;
         }
     }
     else
@@ -106,11 +105,6 @@ void BitcoinExchange::printFileData(const std::vector<std::string> &fileData) {
 const std::map<std::string, double>& BitcoinExchange::getDateMap() {
     return _dataMap;
 }
-
-const std::vector<std::string> &BitcoinExchange::getFileDate() {
-    return _fileData;
-}
-
 
 /**
  * Helpers
