@@ -17,10 +17,19 @@ class PmergeMe {
 		std::list<int> mergeList(const std::list<int>& left, const std::list<int>& right);
 
 		void checkIsNum(char c);
+		void isSort();
+		void start();
+		template <typename T>
+		void display(const T& container);
 
 	private:
 		std::list<int> listNums;
 		std::vector<int> vectorNums;
+
+		std::list<int> endList;
+		std::vector<int> endVector;
+
+
 };
 
 #endif
