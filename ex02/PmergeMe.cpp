@@ -39,10 +39,6 @@ void PmergeMe::start() {
 	display(endVector);
 	std::cout << "Time to process a range of " << vectorNums.size() << " elements with std::vector container: " << time1 << " us" << std::endl;
 	std::cout << "Time to process a range of " << listNums.size() << " elements with std::list container: " << time2 << " us" << std::endl;
-	if (endVector == std::vector<int>(endList.begin(), endList.end()))
-        std::cout << "The sorted sequences are equal." << std::endl;
-    else
-        std::cout << "The sorted sequences are not equal." << std::endl;
 }
 
 template <typename T>
