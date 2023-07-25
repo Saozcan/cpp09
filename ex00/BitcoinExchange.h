@@ -30,11 +30,9 @@ public:
     BitcoinExchange();
     BitcoinExchange(const std::string &fname);
     BitcoinExchange(const BitcoinExchange &BitcoinExchange);
-    BitcoinExchange &operator=(const BitcoinExchange &BitcoinExchange);
     ~BitcoinExchange();
 
     static void printFileData(const std::vector<std::string> &fileData);
-
     const std::map<std::string, double> &getDateMap();
 
 private:
@@ -43,9 +41,10 @@ private:
     std::string trimWhiteSpace(std::string str);
     void readDataIntoMap(const std::string &fname);
     void readFileAndExchange(const std::string &fname);
-
     std::string errorCheck(const std::vector<std::string> &row);
     std::string invalidDateCheck(const std::string &date);
+    std::string trimZerosAfterDecimal(double value);
+
 };
 
 #endif //CPP09_BitcoinExchange_H

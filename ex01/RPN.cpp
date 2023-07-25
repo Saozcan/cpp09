@@ -5,20 +5,20 @@
 #include "RPN.h"
 
 RPN::RPN() {
-
 }
 
 RPN::~RPN() {
-
 }
 
 RPN::RPN(const std::string &str) {
     const std::string checkArr = "0123456789+-*/ ";
     for (int i = 0; i < str.length(); i++) {
         if (checkArr.find(str[i]) == std::string::npos)
-            throw std::runtime_error("Typing Error...");
+            throw std::runtime_error("Typing Error: Invalid Arguments...");
+        else if (str[i] != ' ')
+            this->_allNumbs += str[i];
     }
-    checkAndCalculate(str);
+    checkAndCalculate(_allNumbs);
 }
 
 RPN::RPN(const RPN &obj) {
@@ -38,7 +38,6 @@ void RPN::print() {
     }
     std::cout << std::endl;
 }
-//endline silinecek
 
 void RPN::checkAndCalculate(const std::string &stack) {
     std::stack<int> tempStack;

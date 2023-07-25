@@ -22,6 +22,7 @@ public:
 
 private:
     std::stack<int> _tempStack;
+    std::string _allNumbs;
 
     void checkAndCalculate(const std::string &stack);
     int _calculate(int a, int b, char op);

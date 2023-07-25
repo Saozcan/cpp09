@@ -5,10 +5,6 @@
 #include <cstring>
 #include "BitcoinExchange.h"
 
-BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &BitcoinExchange) {
-    return *this;
-}
-
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &BitcoinExchange) {
     *this = BitcoinExchange;
 }
@@ -26,7 +22,7 @@ BitcoinExchange::~BitcoinExchange() {
 }
 
 
-/**
+/**œ
  * Read functions
  */
 void BitcoinExchange::readDataIntoMap(const std::string &fname) {
@@ -53,37 +49,39 @@ void BitcoinExchange::readDataIntoMap(const std::string &fname) {
 void BitcoinExchange::readFileAndExchange(const std::string &fname) {
     std::vector<std::string> row;
     std::string line, word;
+    int pass = 0;
 
     std::fstream file (fname, std::ios::in);
     if(file.is_open())
     {
         while(getline(file, line))
         {
-            if (line.empty() || line == "date | value")
+            if (pass++ == 0)
                 continue;
             row.clear();
             std::stringstream str(line);
             while(getline(str, word, '|'))
                 row.push_back(trimWhiteSpace(word));
             std::map<std::string, double>::iterator it = _dataMap.find(trimWhiteSpace(row[0]));
-            double exhangeValue;
+            double exchangeValue;
             if (row.size() == 2) {
                 if (!errorCheck(row).empty()) {
                     std::cout << (errorCheck(row)) << std::endl;
                     continue;
                 }
                 if (it != _dataMap.end()) {
-                    exhangeValue = it->second * atof(row[1].c_str());
+                    exchangeValue = it->second * atof(row[1].c_str());
                 }
                 else
-                    exhangeValue = _dataMap.upper_bound(trimWhiteSpace(row[0]))->second * atof(row[1].c_str());
+                    exchangeValue = _dataMap.upper_bound(trimWhiteSpace(row[0]))->second * atof(row[1].c_str());
             }
             else {
                 std::cout << ("Error: bad input => " + row[0]) << std::endl;
                 continue;
             }
-            std::cout << (row[0] + " => " + row[1] + " = " + std::to_string(exhangeValue)) << std::endl;
-        }
+            std::string trimmedValue = trimZerosAfterDecimal(exchangeValue);
+            std::cout << (row[0] + " => " + row[1] + " = " + trimmedValue) << std::endl;
+}
     }
     else
         throw std::invalid_argument("Cannot open file\n");
@@ -135,11 +133,22 @@ std::string BitcoinExchange::invalidDateCheck(const std::string &date) {
     if (date[4] != '-' || date[7] != '-')
         return "Error: invalid date format.";
     if (atol(date.substr(0, 4).c_str()) < 2009 || atol(date.substr(0, 4).c_str()) > 2023)
-        return "Error: invalid date format.";
+        return "Error: Out of range.";
     if (atol(date.substr(5, 2).c_str()) < 1 || atol(date.substr(5, 2).c_str()) > 12)
         return "Error: invalid date format.";
     if (atol(date.substr(8, 2).c_str()) < 1 || atol(date.substr(8, 2).c_str()) > 31)
         return "Error: invalid date format.";
     return "";
+}
+
+std::string BitcoinExchange::trimZerosAfterDecimal(double value) {
+    std::string str = std::to_string(value);
+    size_t decimalPos = str.find('.');
+    if (decimalPos != std::string::npos) {
+        size_t lastNonZero = str.find_last_not_of('0');
+        if (lastNonZero != std::string::npos && lastNonZero > decimalPos)
+            str.erase(lastNonZero + 1);
+    }
+    return str;
 }
 
