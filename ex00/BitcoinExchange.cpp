@@ -22,11 +22,11 @@ BitcoinExchange::~BitcoinExchange() {
 }
 
 
-/**œ
+/**
  * Read functions
  */
 void BitcoinExchange::readDataIntoMap(const std::string &fname) {
-    std::vector<std::string> row;
+    std::deque<std::string> row;
     std::string line, word;
 
     std::fstream file (fname, std::ios::in);
@@ -47,7 +47,7 @@ void BitcoinExchange::readDataIntoMap(const std::string &fname) {
 }
 
 void BitcoinExchange::readFileAndExchange(const std::string &fname) {
-    std::vector<std::string> row;
+    std::deque<std::string> row;
     std::string line, word;
     int pass = 0;
 
@@ -73,7 +73,15 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
                     exchangeValue = it->second * atof(row[1].c_str());
                 }
                 else
-                    exchangeValue = _dataMap.upper_bound(trimWhiteSpace(row[0]))->second * atof(row[1].c_str());
+                {
+                    std::map<std::string, double>::iterator it = _dataMap.lower_bound(trimWhiteSpace(row[0]));
+                    std::string previousKey;
+                    if(it != _dataMap.begin()){
+                        it--;
+                        previousKey = it->first;
+                    }
+                    exchangeValue = _dataMap.find(previousKey)->second * atof(row[1].c_str());
+                }
             }
             else {
                 std::cout << ("Error: bad input => " + row[0]) << std::endl;
@@ -91,7 +99,7 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
 /**
  * Print
  */
-void BitcoinExchange::printFileData(const std::vector<std::string> &fileData) {
+void BitcoinExchange::printFileData(std::deque<std::string> &fileData) {
     for(int i=0;i<fileData.size();i++)
         std::cout<<fileData[i]<<std::endl;
 }
@@ -103,6 +111,7 @@ void BitcoinExchange::printFileData(const std::vector<std::string> &fileData) {
 const std::map<std::string, double>& BitcoinExchange::getDateMap() {
     return _dataMap;
 }
+
 
 /**
  * Helpers
@@ -119,7 +128,7 @@ std::string BitcoinExchange::trimWhiteSpace(std::string str) {
     return str;
 }
 
-std::string BitcoinExchange::errorCheck(const std::vector<std::string> &row) {
+std::string BitcoinExchange::errorCheck(std::deque<std::string> &row) {
     if (atof(row[1].c_str()) < 0)
         return "Error: not a positive number.";
     if (atol(row[1].c_str()) > INT32_MAX)
@@ -132,22 +141,33 @@ std::string BitcoinExchange::invalidDateCheck(const std::string &date) {
         return "Error: invalid date format.";
     if (date[4] != '-' || date[7] != '-')
         return "Error: invalid date format.";
-    if (atol(date.substr(0, 4).c_str()) < 2009 || atol(date.substr(0, 4).c_str()) > 2023)
+
+    int year = atoi(date.substr(0, 4).c_str());
+    int month = atoi(date.substr(5, 2).c_str());
+    int day = atoi(date.substr(8, 2).c_str());
+    int monthLimits[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if (year < 2009 || year > 2023)
         return "Error: Out of range.";
-    if (atol(date.substr(5, 2).c_str()) < 1 || atol(date.substr(5, 2).c_str()) > 12)
+    if (month < 1 || month > 12)
         return "Error: invalid date format.";
-    if (atol(date.substr(8, 2).c_str()) < 1 || atol(date.substr(8, 2).c_str()) > 31)
+    if (day < 1 || day > monthLimits[month - 1])
         return "Error: invalid date format.";
+    if (year == 2009 && month == 1 && day == 1)
+        return "Error: Out of range.";
+    if (year == 2022 && month > 3 || day > 29)
+        return "Error: Out of range.";
     return "";
 }
 
 std::string BitcoinExchange::trimZerosAfterDecimal(double value) {
     std::string str = std::to_string(value);
-    size_t decimalPos = str.find('.');
-    if (decimalPos != std::string::npos) {
-        size_t lastNonZero = str.find_last_not_of('0');
-        if (lastNonZero != std::string::npos && lastNonZero > decimalPos)
-            str.erase(lastNonZero + 1);
+    std::string::iterator it = str.end();
+    if (static_cast<int>(value) == 0)
+        return "0";
+    for (; it != str.begin() ; it--) {
+        if (*it == '0')
+            str.pop_back();
     }
     return str;
 }

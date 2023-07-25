@@ -51,7 +51,7 @@ void RPN::checkAndCalculate(const std::string &stack) {
             tempStack.pop();
             int b = tempStack.top();
             tempStack.pop();
-            tempStack.push(_calculate(a, b, stack[i]));
+            tempStack.push(_calculate(b, a, stack[i]));
         }
     }
     _tempStack = tempStack;
