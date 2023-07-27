@@ -50,7 +50,7 @@ void PmergeMe::display(const T& container)
 }
 
 std::vector<int> PmergeMe::mergeInsertSortVector(std::vector<int>& arr) {
-    static int threshold = 4;
+    static size_t threshold = 4;
 
     if (arr.size() <= threshold) {
         for (std::size_t i = 1; i < arr.size(); i++) {
@@ -97,7 +97,7 @@ std::vector<int> PmergeMe::mergeVector(const std::vector<int>& left, const std::
 }
 
 std::list<int> PmergeMe::mergeInsertSortList(std::list<int>& lst) {
-        static int threshold = 4; 
+        static size_t threshold = 4; 
 
         if (lst.size() <= threshold) {
             for (std::list<int>::iterator it = std::next(lst.begin()); it != lst.end(); ++it) {
