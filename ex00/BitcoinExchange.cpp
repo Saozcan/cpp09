@@ -155,7 +155,7 @@ std::string BitcoinExchange::invalidDateCheck(const std::string &date) {
         return "Error: invalid date format.";
     if (year == 2009 && month == 1 && day == 1)
         return "Error: Out of range.";
-    if (year == 2022 && month > 3 || day > 29)
+    if (year == 2022 && month >= 3 || day > 29)
         return "Error: Out of range.";
     return "";
 }
