@@ -13,9 +13,6 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	c++ $(FLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.cpp $(HEADER)
-	c++ $(FLAGS) -c $< -o $@
-
 clean:
 	rm -f $(OBJ)
 
