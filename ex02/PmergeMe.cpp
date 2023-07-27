@@ -22,7 +22,6 @@ PmergeMe::PmergeMe(char **av){
 }
 
 void PmergeMe::start() {
-	srand(time(NULL));
 	std::cout << "Before: ";
     display(vectorNums);
     clock_t start1 = clock();
@@ -54,7 +53,7 @@ std::vector<int> PmergeMe::mergeInsertSortVector(std::vector<int>& arr) {
     static int threshold = 4;
 
     if (arr.size() <= threshold) {
-        for (std::size_t i = 1; i < arr.size(); ++i) {
+        for (std::size_t i = 1; i < arr.size(); i++) {
             int temp = arr[i];
             std::size_t j = i;
             while (j > 0 && arr[j - 1] > temp) {

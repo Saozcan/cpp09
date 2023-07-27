@@ -30,10 +30,8 @@ void BitcoinExchange::readDataIntoMap(const std::string &fname) {
     std::string line, word;
 
     std::fstream file (fname, std::ios::in);
-    if(file.is_open())
-    {
-        while(getline(file, line))
-        {
+    if(file.is_open()) {
+        while(getline(file, line)) {
             row.clear();
             std::stringstream str(line);
             while(getline(str, word, ','))
@@ -52,10 +50,8 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
     int pass = 0;
 
     std::fstream file (fname, std::ios::in);
-    if(file.is_open())
-    {
-        while(getline(file, line))
-        {
+    if(file.is_open()) {
+        while(getline(file, line)) {
             if (pass++ == 0)
                 continue;
             row.clear();
@@ -131,7 +127,7 @@ std::string BitcoinExchange::trimWhiteSpace(std::string str) {
 std::string BitcoinExchange::errorCheck(std::deque<std::string> &row) {
     if (atof(row[1].c_str()) < 0)
         return "Error: not a positive number.";
-    if (atol(row[1].c_str()) > INT32_MAX)
+    if (atol(row[1].c_str()) > 1000)
         return "Error: too large a number.";
     return invalidDateCheck(trimWhiteSpace(row[0]));
 }
@@ -162,13 +158,14 @@ std::string BitcoinExchange::invalidDateCheck(const std::string &date) {
 
 std::string BitcoinExchange::trimZerosAfterDecimal(double value) {
     std::string str = std::to_string(value);
-    std::string::iterator it = str.end();
-    if (static_cast<int>(value) == 0)
+    std::string::iterator it = prev(str.end());
+    if (value == 0.0)
         return "0";
     for (; it != str.begin() ; it--) {
-        if (*it == '0')
+        if (*it == '0' || *it == '.')
             str.pop_back();
+        else
+            break;
     }
     return str;
 }
-
