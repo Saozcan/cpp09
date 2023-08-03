@@ -5,11 +5,6 @@
 #include <cstring>
 #include "BitcoinExchange.h"
 
-BitcoinExchange::BitcoinExchange(const BitcoinExchange &BitcoinExchange) {
-    *this = BitcoinExchange;
-}
-
-
 BitcoinExchange::BitcoinExchange(const std::string &fname) {
     readDataIntoMap(CSV_FILE);
     readFileAndExchange(fname);
@@ -68,11 +63,10 @@ void BitcoinExchange::readFileAndExchange(const std::string &fname) {
                 if (it != _dataMap.end()) {
                     exchangeValue = it->second * atof(row[1].c_str());
                 }
-                else
-                {
+                else {
                     std::map<std::string, double>::iterator it = _dataMap.lower_bound(trimWhiteSpace(row[0]));
                     std::string previousKey;
-                    if(it != _dataMap.begin()){
+                    if(it != _dataMap.begin()) {
                         it--;
                         previousKey = it->first;
                     }
@@ -137,29 +131,24 @@ std::string BitcoinExchange::invalidDateCheck(const std::string &date) {
         return "Error: invalid date format.";
     if (date[4] != '-' || date[7] != '-')
         return "Error: invalid date format.";
+    if (!isValidDate(date))
+        return "Error: invalid date format.";
 
     int year = atoi(date.substr(0, 4).c_str());
     int month = atoi(date.substr(5, 2).c_str());
     int day = atoi(date.substr(8, 2).c_str());
     int monthLimits[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-    std::cout << date << std::endl;
-
-    if (year < 2009 || year > 2023){
-        std::cout << year << std::endl;
+    if (year < 2009 || year > 2023)
         return "Error: Out of range.";
-    }
     if (month < 1 || month > 12)
         return "Error: invalid date format.";
     if (day < 1 || day > monthLimits[month - 1])
         return "Error: invalid date format.";
-    if (year == 2009 && month == 1 && day == 1) {
-        std::cout << "Hello\n";
+    if (year == 2009 && month == 1 && day == 1) 
         return "Error: Out of range.";
-    }
-    if (year == 2022 && month >= 3 || day > 29) {
+    if (year == 2022 && month >= 3 && day > 29)
         return "Error: Out of range.";
-    }
     return "";
 }
 
@@ -177,8 +166,18 @@ std::string BitcoinExchange::trimZerosAfterDecimal(double value) {
     return str;
 }
 
+bool BitcoinExchange::isValidDate(const std::string &date) {
+    std::string validCharacters = "0123456789-";
+    for (int i = 0; i < date.length(); i++) {
+        if (validCharacters.find(date[i]) == std::string::npos)
+            return false;
+    }
+    return true;
+}
+
 
 /**
  * tarih icinde sayi haric gelenlerin kontrolu
  * if 29 dan buyukse kontrolu 
  * 
+ */
